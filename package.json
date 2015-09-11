@@ -1,0 +1,14 @@
+{
+  "name": "filesystem-bower-resolver",
+  "version": "1.0.0",
+  "description": "Filesystem resolver for bower",
+  "main": "index.js",
+  "keywords": [
+    "bower-resolver"
+  ],
+  "author": "Igor Dimitrijevic <igor@backbase.com>",
+  "license": "ISC",
+  "dependencies": {
+    "fs-extra-promise": "^0.2.1"
+  }
+}
