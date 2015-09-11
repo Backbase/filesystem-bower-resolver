@@ -55,6 +55,9 @@ module.exports = function resolver (bower) {
                 tempPath: tempPath,
                 removeIgnores: true
             };
+        })
+        .catch(function() {
+            return;
         });
     }
   };
