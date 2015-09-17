@@ -1,6 +1,6 @@
 var fs = require('fs-extra-promise');
 var path = require('path');
-var os = require('os');
+var tmp = require('tmp');
 
 /**
  * Factory function for resolver
@@ -15,32 +15,10 @@ module.exports = function resolver (bower) {
     // Match method tells whether resolver supports given source
     // It can return either boolean or promise of boolean
     match: function (source) {
+        if (['.', '/', '~'].indexOf(source.charAt(0)) === -1) return false;
         return fs.isDirectoryAsync(path.resolve(source))
         .catch(function() {
             return false;
-        });
-    },
-
-    // Optional:
-    // Can resolve or normalize sources, like:
-    // "jquery" => "git://github.com/jquery/jquery.git"
-    locate: function (source) {
-        return path.resolve(source);
-    },
-
-    // Optional:
-    // Allows to list available versions of given source.
-    // Bower chooses matching release and passes it to "fetch"
-    releases: function (source) {
-        return fs.readJsonAsync(path.join(source, 'bower.json'))
-        .then(function(bw) {
-            return [{
-                target: bw.version,
-                version: bw.version
-            }];
-        })
-        .catch(function(err) {
-            return [];
         });
     },
 
@@ -48,11 +26,11 @@ module.exports = function resolver (bower) {
     // You can use npm's "tmp" package to tmp directories
     // See the "Resolver API" section for details on this method
     fetch: function (endpoint, cached) {
-        var tempPath = path.join(os.tmpdir(), endpoint.name);
-        return fs.copyAsync(endpoint.source, tempPath)
+        var tmpDir = tmp.dirSync().name;
+        return fs.copyAsync(endpoint.source, tmpDir)
         .then(function() {
             return {
-                tempPath: tempPath,
+                tempPath: tmpDir,
                 removeIgnores: true
             };
         })
