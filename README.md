@@ -36,6 +36,9 @@ define your dependency to `bower.json` as file path:
 "dependencies": {
     "some-component": "1.0.0",
     "some-component": "./some-component"
+},
+"resolutions": {
+    "some-component": "*"
 }
 ```
 
