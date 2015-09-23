@@ -9,11 +9,8 @@ var tmp = require('tmp');
  */
 module.exports = function resolver (bower) {
 
-  // Resolver factory returns an instance of resolver
   return {
 
-    // Match method tells whether resolver supports given source
-    // It can return either boolean or promise of boolean
     match: function (source) {
         if (['.', '/', '~'].indexOf(source.charAt(0)) === -1) return false;
         return fs.isDirectoryAsync(path.resolve(source))
@@ -22,19 +19,31 @@ module.exports = function resolver (bower) {
         });
     },
 
-    // It downloads package and extracts it to temporary directory
-    // You can use npm's "tmp" package to tmp directories
-    // See the "Resolver API" section for details on this method
+    releases: function (source) {
+        var bjsPath = path.join(source, 'bower.json');
+        return fs.readJsonAsync(bjsPath)
+        .then(function(bjs) {
+            return [{
+                target: bjs.version,
+                version: bjs.version
+            }];
+        });
+    },
+
     fetch: function (endpoint, cached) {
         var tmpDir = tmp.dirSync().name;
-        return fs.copyAsync(endpoint.source, tmpDir)
-        .then(function() {
-            return {
-                tempPath: tmpDir,
-                removeIgnores: true
-            };
+        return fs.realpathAsync(endpoint.source)
+        .then(function(realPath) {
+            return fs.copyAsync(realPath, tmpDir)
+            .then(function() {
+                return {
+                    tempPath: tmpDir,
+                    removeIgnores: true
+                };
+            });
         })
-        .catch(function() {
+        .catch(function(err) {
+            console.log(err);
             return;
         });
     }

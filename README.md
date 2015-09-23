@@ -17,7 +17,7 @@ npm install --global filesystem-bower-resolver
 
 or add it as `devDependency` to your `package.json` file
 
-#### Usage
+#### Usage Example
 
 Add `filesystem-bower-resolver` to [.bowerrc](http://bower.io/docs/config/)
 
@@ -30,16 +30,19 @@ Add `filesystem-bower-resolver` to [.bowerrc](http://bower.io/docs/config/)
 }
 ```
 
-define your dependency to `bower.json` as file path:
+define your dependency in `bower.json` as file path:
 
 ```
 "dependencies": {
-    "some-component": "1.0.0",
-    "some-component": "./some-component"
-},
+    "dependency-that-depends-on-my-component-1.0.0": "0.1.2",
+    "my-component": "./my-component-dir#100.0.0"
+}
 "resolutions": {
-    "some-component": "*"
+    "my-component": "100.0.0"
 }
 ```
 
-...and bower will resolve to your local version of `some-component`
+> be sure that `./my-component-dir/bower.json` contains `"version": "100.0.0"`  
+> `1.0.0`, `0.1.2` and `100.0.0` are just examples, any valid semvers will work 
+
+...and bower will install your local `./my-component-dir`
