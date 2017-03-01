@@ -12,7 +12,7 @@ module.exports = function resolver (bower) {
   return {
 
     match: function (source) {
-        if (['.', '/', '~'].indexOf(source.charAt(0)) === -1) return false;
+        if (['.', '/', '~', '\\'].indexOf(source.charAt(0)) === -1) return false;
         return fs.isDirectoryAsync(path.resolve(source))
         .catch(function() {
             return false;
